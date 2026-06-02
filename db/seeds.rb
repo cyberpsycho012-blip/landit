@@ -16,7 +16,7 @@ Education.destroy_all
 Languages.destroy_all
 
 resume = Resume.create!(
-    name: 'resume',
+    name: Faker::Name.name,
     title: 'full-stack Developer',
     email: Faker::Internet.user,
     summary: "Passionate developper with 9 weeks bootcamps capable of creating an app"
@@ -81,7 +81,7 @@ resume.experiences.create!([
   {
     company: Faker::Company.name,
     role: "Senior Software Engineer",
-    start_date: Date.new(2021, 5, 1),
+    start_date: Date.new(2021, 05, 10),
     end_date: nil,
     description: "Lead developer for multiple SaaS products, mentoring junior engineers and improving system performance."
   },
