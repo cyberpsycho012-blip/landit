@@ -6,12 +6,13 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
   def after_sign_in_path_for(resource)
-    pages_dashboard_path
+    dashboard_path
   end
+
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, [:avatar])
-    devise_parameter_sanitizer.permit(:account_update, [:avatar])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:avatar])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:avatar])
   end
 end
