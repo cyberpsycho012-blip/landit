@@ -5,7 +5,9 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
-
+  def after_sign_in_path_for(resource)
+    pages_dashboard_path
+  end
   protected
 
   def configure_permitted_parameters
