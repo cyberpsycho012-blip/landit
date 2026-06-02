@@ -1,0 +1,11 @@
+<h1 class="text-center p-3">All Resumes</h1>
+
+<% @resumes.each do |resume| %>
+  <div class="card-product">
+  <%# <img src="#"/> %>
+    <div class="card-product-infos">
+      <h2><%= link_to resume.name, resume_path(resume) %></h2>
+      <p>Click to check your resume</p>
+    </div>
+  </div>
+<% end %>
