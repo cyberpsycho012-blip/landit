@@ -18,6 +18,7 @@
       </div>
 
     </div>
+<% if @chat %>
     <div class="col-8 p-4 my-4">
       <h1 id="chat_title"><%= @chat.title %></h1>
 
@@ -47,7 +48,7 @@
           <%= f.button :submit, 'Ask LLM', class: 'btn btn-primary' %>
         <% end %>
       </div>
-
+<% end %>
     </div>
   </div>
 </div>
