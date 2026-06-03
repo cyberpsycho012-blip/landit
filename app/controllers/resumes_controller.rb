@@ -10,8 +10,11 @@ class ResumesController < ApplicationController
   def create
     @resume = Resume.new(resume_params)
     @resume.user = current_user
-    @resume.save
-    redirect_to resume_path(@resume)
+    if @resume.save
+      redirect_to resume_path(@resume), notice: "Resume created!"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
@@ -20,8 +23,11 @@ class ResumesController < ApplicationController
 
   def update
     @resume = Resume.find(params[:id])
-    @resume.update(resume_params)
-    redirect_to resume_path(@resume)
+    if @resume.update(resume_params)
+      redirect_to resume_path(@resume), notice: "Resume created!"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def show
