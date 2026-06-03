@@ -19,9 +19,18 @@ class MessagesController < ApplicationController
       @assistant_message = @chat.messages.create(role: "assistant", content: response.content)
       @chat.generate_title_from_first_message
 
-      redirect_to dashboard_path
+      respond_to do |format|
+        format.turbo_stream # renders `app/views/messages/create.turbo_stream.erb`
+        format.html { redirect_to chat_path(@chat) }
+      end
     else
-      render "dashboard", status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update("new_message_container", partial: "messages/form",
+                                                                            locals: { chat: @chat, message: @message })
+        end
+        format.html { render "chats/show", status: :unprocessable_entity }
+      end
     end
   end
 
