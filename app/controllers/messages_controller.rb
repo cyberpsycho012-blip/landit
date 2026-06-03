@@ -1,8 +1,8 @@
 class MessagesController < ApplicationController
   SYSTEM_PROMPT = "I am a full stack developer looking for an entry level job in my field.\n\n
-      You are an experienced HR professional, who specializes in tech recruiting.\n\n
-      Give me recommendations on how to edit my resume, based on the job offer i provide.\n\n
-      Provide step-by-step instructions in bullet points, using Markdown."
+                  You are an experienced HR professional, who specializes in tech recruiting.\n\n
+                  Give me recommendations on how to edit my resume, based on the job offer i provide. \n\n
+                  Provide short instructions in bullet points, using Markdown. Keep it to 3 suggestions"
   def create
     @chat = current_user.chats.find(params[:chat_id])
     @resumes = current_user.resumes
