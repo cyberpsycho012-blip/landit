@@ -1,54 +1,31 @@
+<div class="container mt-3 mb-5">
 <h1 class="text-center p-3"><%= @resume.name %></h1>
 
 <div class="card-product">
   <div class="card-product-infos">
     <h2>Education:</h2>
-    <p><%= @resume.education %></p>
-  </div>
-</div>
+    <p><%= simple_format(@resume.education) %></p>
 
-<div class="card-product">
-  <div class="card-product-infos">
     <h2>Languages:</h2>
     <p><%= @resume.languages %></p>
-  </div>
-</div>
 
-<div class="card-product">
-  <div class="card-product-infos">
     <h2>Main tech skill:</h2>
     <p><%= @resume.main_tech_skill %></p>
-  </div>
-</div>
 
-<div class="card-product">
-  <div class="card-product-infos">
     <h2>Secondary tech skill:</h2>
     <p><%= @resume.secondary_tech_skills %></p>
-  </div>
-</div>
 
-<div class="card-product">
-  <div class="card-product-infos">
     <h2>Soft skills:</h2>
     <p><%= @resume.soft_skills %></p>
-  </div>
-</div>
 
-<div class="card-product">
-  <div class="card-product-infos">
     <h2>Work experiences:</h2>
-    <p><%= @resume.work_experiences %></p>
-  </div>
-</div>
+    <p><%= simple_format(@resume.work_experiences) %></p>
 
-<div class="card-product">
-  <div class="card-product-infos">
     <h2>Years of experience:</h2>
     <p><%= @resume.years_of_experience %></p>
   </div>
 </div>
 
-
 <%= link_to "Back to List", resumes_path, class: 'btn btn-primary m-3' %>
 <%= link_to "Edit Resume", edit_resume_path(@resume), class: 'btn btn-primary m-3' %>
+</div>
