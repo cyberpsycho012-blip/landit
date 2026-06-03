@@ -17,7 +17,7 @@ user = User.create!(
   password: "123456",
 )
 
-resume = Resume.create!(
+Resume.create!(
     name: "resume ruby",
     education: "9 weeks at lewagon",
     languages: "french, portugese, polish, english",
