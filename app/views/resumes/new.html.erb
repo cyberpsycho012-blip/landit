@@ -13,3 +13,13 @@
     <%= f.submit "Submit Resume", class: 'btn btn-primary' %>
   <% end %>
 </div>
+<% if @resume.errors.any? %>
+  <div class="alert alert-danger">
+    <strong><%= pluralize(@resume.errors.count, "error") %> prevented this resume from being saved:</strong>
+    <ul>
+      <% @resume.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
