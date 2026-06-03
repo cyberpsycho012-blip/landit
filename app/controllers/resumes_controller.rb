@@ -9,6 +9,7 @@ class ResumesController < ApplicationController
 
   def create
     @resume = Resume.new(resume_params)
+    @resume.user = current_user
     @resume.save
     redirect_to resume_path(@resume)
   end
