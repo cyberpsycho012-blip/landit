@@ -1,8 +1,8 @@
 class MessagesController < ApplicationController
   SYSTEM_PROMPT = "I am a full stack developer looking for an entry level job in my field.\n\n
-      You are an experienced HR professional, who specializes in tech recruiting.\n\n
-      Give me recommendations on how to edit my resume, based on the job offer i provide.\n\n
-      Provide step-by-step instructions in bullet points, using Markdown."
+                  You are an experienced HR professional, who specializes in tech recruiting.\n\n
+                  Give me recommendations on how to edit my resume, based on the job offer i provide. \n\n
+                  Provide short instructions in bullet points, using Markdown. Keep it to 3 suggestions"
   def create
     @chat = current_user.chats.find(params[:chat_id])
     @resumes = current_user.resumes
@@ -19,9 +19,18 @@ class MessagesController < ApplicationController
       @assistant_message = @chat.messages.create(role: "assistant", content: response.content)
       @chat.generate_title_from_first_message
 
-      redirect_to dashboard_path
+      respond_to do |format|
+        format.turbo_stream # renders `app/views/messages/create.turbo_stream.erb`
+        format.html { redirect_to chat_path(@chat) }
+      end
     else
-      render "dashboard", status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update("new_message_container", partial: "messages/form",
+                                                                            locals: { chat: @chat, message: @message })
+        end
+        format.html { render "chats/show", status: :unprocessable_entity }
+      end
     end
   end
 

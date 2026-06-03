@@ -18,7 +18,7 @@
       <ul class="navbar-nav me-auto">
         <% if user_signed_in? %>
           <li class="nav-menu nav-item active">
-            <%= link_to "Home", "dashboard", class: "nav-link" %>
+            <%= link_to "Home", dashboard_path, class: "nav-link" %>
           </li>
           <li class="nav-menu nav-item">
             <%= link_to "Resumes", resumes_path, class: "nav-link" %>
