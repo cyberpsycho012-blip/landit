@@ -3,11 +3,11 @@ source "https://rubygems.org"
 gem "devise"
 gem "ruby_llm", "~> 1.15.0"
 gem "dotenv-rails"
-
+gem "cloudinary"
 gem "kramdown"
 gem "rouge"
 gem "kramdown-parser-gfm"
-
+gem "activestorage-cloudinary-service"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.3"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
