@@ -1,13 +1,25 @@
-<h1>Upload your resume here</h1>
+<div class="container mt-3 mb-5">
+  <h1 class="text-center p-3">Create your resume here</h1>
 
-<%= simple_form_for (@resume) do |f| %>
-  <%= f.input :name %>
-  <%= f.input :education %>
-  <%= f.input :languages %>
-  <%= f.input :main_tech_skill %>
-  <%= f.input :secondary_tech_skills %>
-  <%= f.input :soft_skills %>
-  <%= f.input :work_experiences %>
-  <%= f.input :years_of_experience %>
-  <%= f.submit "Submit Resume" %>
+  <%= simple_form_for (@resume) do |f| %>
+    <%= f.input :name %>
+    <%= f.input :education %>
+    <%= f.input :languages %>
+    <%= f.input :main_tech_skill %>
+    <%= f.input :secondary_tech_skills %>
+    <%= f.input :soft_skills %>
+    <%= f.input :work_experiences %>
+    <%= f.input :years_of_experience %>
+    <%= f.submit "Submit Resume", class: 'btn btn-primary' %>
+  <% end %>
+</div>
+<% if @resume.errors.any? %>
+  <div class="alert alert-danger">
+    <strong><%= pluralize(@resume.errors.count, "error") %> prevented this resume from being saved:</strong>
+    <ul>
+      <% @resume.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>

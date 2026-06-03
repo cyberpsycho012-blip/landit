@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "devise"
-gem "ruby_llm", "~> 1.2.0"
+gem "ruby_llm", "~> 1.15.0"
 gem "dotenv-rails"
 
 gem "kramdown"

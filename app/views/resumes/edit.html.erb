@@ -1,5 +1,5 @@
-<h1>Resumes#edit</h1>
-<h1> Edit </h1>
+<div class="container mt-3 mb-5">
+<h1 class="text-center p-3"> Edit </h1>
 <%= simple_form_for (@resume) do |f| %>
   <%= f.input :name %>
   <%= f.input :education %>
@@ -10,4 +10,15 @@
   <%= f.input :work_experiences %>
   <%= f.input :years_of_experience %>
   <%= f.submit "Submit Resume" %>
+<% end %>
+</div>
+<% if @resume.errors.any? %>
+  <div class="alert alert-danger">
+    <strong><%= pluralize(@resume.errors.count, "error") %> prevented this resume from being saved:</strong>
+    <ul>
+      <% @resume.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>
