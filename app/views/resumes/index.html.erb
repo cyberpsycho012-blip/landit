@@ -1,12 +1,14 @@
-<h1 class="text-center p-3">All Resumes</h1>
+<div class="container mt-3">
+  <h1 class="text-center  p-3">Your Resumes</h1>
 
-<% @resumes.each do |resume| %>
-  <div class="card-product">
-  <%# <img src="#"/> %>
-    <div class="card-product-infos">
-      <h2><%= link_to resume.name, resume_path(resume) %></h2>
-      <p>Click to check your resume</p>
+  <% @resumes.each do |resume| %>
+    <div class="card-product">
+      <div class="card-product-infos">
+        <%= link_to resume.name, resume_path(resume), class: 'text-decoration-none ' %>
+        <p>Check your resume</p>
+      </div>
     </div>
-  </div>
-<% end %>
-<%= link_to "Create new resume", new_resume_path, class: "btn btn-primary" %>
+  <% end %>
+
+  <%= link_to "Create new resume", new_resume_path, class: "btn btn-primary my-4" %>
+</div>
