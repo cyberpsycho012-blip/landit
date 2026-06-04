@@ -7,7 +7,7 @@ class PagesController < ApplicationController
     @chats = current_user.chats
     @message = Message.new
 
-    @chat = Chat.last
+    @chat = current_user.chats.last unless @chats.empty?
   end
 
   private
