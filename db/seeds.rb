@@ -1,5 +1,5 @@
-User.destroy_all
 Chat.destroy_all
+User.destroy_all
 Resume.destroy_all
 
 user1 = User.create!(
