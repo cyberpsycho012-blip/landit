@@ -1,5 +1,5 @@
-User.destroy_all
 Chat.destroy_all
+User.destroy_all
 Resume.destroy_all
 
 user1 = User.create!(
@@ -39,4 +39,4 @@ Resume.create!(
   work_experiences: " 04.2006 - 06.2010 working for a tech company",
   user: user2
 )
-#done
+#done1
