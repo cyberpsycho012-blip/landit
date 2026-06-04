@@ -3,6 +3,29 @@ class MessagesController < ApplicationController
                   You are an experienced HR professional, who specializes in tech recruiting.\n\n
                   Give me recommendations on how to edit my resume, based on the job offer i provide. \n\n
                   Provide short instructions in bullet points, using Markdown. Keep it to 3 suggestions"
+
+  def broadcast_replace(message)
+    Turbo::SteamsChannel.broadcast_replace_to(@chat, target: helpers.dom_id(message), partial:
+    "messages/message", locals: { mesage: message })
+  end
+
+  def ask_llm
+    @ruby_llm_chat = RubyLLM.chat
+
+    build_conversation_history
+
+    @ruby_llm_chat.with_tool(SearchResumesTool)
+    @ruby_llm_chat.with_tool(CreateLlmResumesTool.new(user: current_user))
+    @ruby_llm_chat.with_instructions(instructions)
+
+    @ruby_llm_chat.ask(@message.content) do |chunk|
+      next if chunk.content.blank?
+
+      @assistant_message.content += chunk.content
+      broadcast_replace(@assistant_message)
+    end
+  end
+
   def create
     @chat = current_user.chats.find(params[:chat_id])
     @resumes = current_user.resumes
@@ -14,9 +37,13 @@ class MessagesController < ApplicationController
     if @message.save
       @ruby_llm_chat = RubyLLM.chat
       build_conversation_history
-      response = @ruby_llm_chat.with_instructions(instructions).ask(@message.content)
+      # response = @ruby_llm_chat.with_instructions(instructions).ask(@message.content)
+      # ------------- LECTURE WAS SAYING TO DO IT LIKE THIS NOW ----------
+      @assistant_message = @chat.messages.create(role: "assistant", content: "")
+      response = ask_llm
+      @assistant_message.update(content: response.content)
+      broadcast_replace(@assistant_message)
 
-      @assistant_message = @chat.messages.create(role: "assistant", content: response.content)
       @chat.generate_title_from_first_message
 
       respond_to do |format|
@@ -38,6 +65,8 @@ class MessagesController < ApplicationController
 
   def build_conversation_history
     @chat.messages.each do |message|
+      next if message.content.blank?
+
       @ruby_llm_chat.add_message(role: message.role.to_sym, content: message.content)
     end
   end
