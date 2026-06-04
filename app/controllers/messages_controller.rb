@@ -29,7 +29,7 @@ class MessagesController < ApplicationController
     Each recommendation must be specific and actionable."
 
   def broadcast_replace(message)
-    Turbo::SteamsChannel.broadcast_replace_to(@chat, target: helpers.dom_id(message), partial:
+    Turbo::StreamsChannel.broadcast_replace_to(@chat, target: helpers.dom_id(message), partial:
     "messages/message", locals: { mesage: message })
   end
 
@@ -39,7 +39,7 @@ class MessagesController < ApplicationController
     build_conversation_history
 
     @ruby_llm_chat.with_tool(SearchResumesTool)
-    @ruby_llm_chat.with_tool(CreateLlmResumesTool.new(user: current_user))
+    @ruby_llm_chat.with_tool(CreateLlmResumeTool.new(user: current_user))
     @ruby_llm_chat.with_instructions(instructions)
 
     @ruby_llm_chat.ask(@message.content) do |chunk|
@@ -49,7 +49,6 @@ class MessagesController < ApplicationController
       broadcast_replace(@assistant_message)
     end
   end
-
 
   def create
     @chat = current_user.chats.find(params[:chat_id])
@@ -62,8 +61,7 @@ class MessagesController < ApplicationController
     if @message.save
       @ruby_llm_chat = RubyLLM.chat
       build_conversation_history
-      # response = @ruby_llm_chat.with_instructions(instructions).ask(@message.content)
-      # ------------- LECTURE WAS SAYING TO DO IT LIKE THIS NOW ----------
+
       @assistant_message = @chat.messages.create(role: "assistant", content: "")
       response = ask_llm
       @assistant_message.update(content: response.content)
