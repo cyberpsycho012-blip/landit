@@ -8,12 +8,13 @@
 }
 
 .sidebar-details {
-  padding: 5px;
+
   text-decoration: none;
   color: black;
 
   &:hover {
-    color: grey;
+    color: purple;
+    border-bottom: 1px dotted purple;
   }
 }
 
