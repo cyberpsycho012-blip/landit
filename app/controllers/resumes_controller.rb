@@ -36,6 +36,13 @@ class ResumesController < ApplicationController
     @resume = Resume.find(params[:id])
   end
 
+  def destroy
+    @resume = Resume.find(params[:id])
+    @resume.destroy
+
+    redirect_to resumes_path
+  end
+
   private
 
   def resume_params
