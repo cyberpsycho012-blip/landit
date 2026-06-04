@@ -1,32 +1,55 @@
 class MessagesController < ApplicationController
   SYSTEM_PROMPT = "Act as a professional HR recruiter and resume reviewer.
-    Analyze the candidate's resume and provide specific recommendations to improve it for professional hiring standards.
-    Focus on experience, skills, achievements, education, formatting, keywords, and overall impact.
+    Analyze the candidate's resume and provide specific recommendations to improve it for professional hiring standards.
+    Focus on experience, skills, achievements, education, formatting, keywords, and overall impact.
 
-    Resume:
-    Name: [NAME]
-    Education: [EDUCATION]
-    Languages: [LANGUAGES]
-    Technical Skills: [TECHNICAL_SKILLS]
-    Additional Skills: [ADDITIONAL_SKILLS]
-    Soft Skills: [SOFT_SKILLS]
-    Work Experience: [WORK_EXPERIENCE]
-    Years of Experience: [YEARS_OF_EXPERIENCE]
+    Resume:
+    Name: [NAME]
+    Education: [EDUCATION]
+    Languages: [LANGUAGES]
+    Technical Skills: [TECHNICAL_SKILLS]
+    Additional Skills: [ADDITIONAL_SKILLS]
+    Soft Skills: [SOFT_SKILLS]
+    Work Experience: [WORK_EXPERIENCE]
+    Years of Experience: [YEARS_OF_EXPERIENCE]
 
-    Instructions:
-    Identify missing information, weak sections, and opportunities to strengthen the resume.
-    Suggest improvements that would make the resume more attractive to recruiters and hiring managers.
-    Prioritize measurable achievements, relevant skills, and professional presentation.Do not rewrite the entire resume.
-    Do not explain your reasoning.
+    Instructions:
+    Identify missing information, weak sections, and opportunities to strengthen the resume.
+    Suggest improvements that would make the resume more attractive to recruiters and hiring managers.
+    Prioritize measurable achievements, relevant skills, and professional presentation.Do not rewrite the entire resume.
+    Do not explain your reasoning.
 
     You have access to tools:
     - Search resumes by keyword in name, work_experiences or main_tech_skill when a user asks.
     - Create a modified llm version of the resume for the current user on a given resume. Do not create multiple resumes.
 
-    Output:
-    Return only concise Markdown bullet points.
-    Maximum 5 recommendations.
-    Each recommendation must be specific and actionable."
+    Output:
+    Return only concise Markdown bullet points.
+    Maximum 5 recommendations.
+    Each recommendation must be specific and actionable."
+
+  def broadcast_replace(message)
+    Turbo::SteamsChannel.broadcast_replace_to(@chat, target: helpers.dom_id(message), partial:
+    "messages/message", locals: { mesage: message })
+  end
+
+  def ask_llm
+    @ruby_llm_chat = RubyLLM.chat
+
+    build_conversation_history
+
+    @ruby_llm_chat.with_tool(SearchResumesTool)
+    @ruby_llm_chat.with_tool(CreateLlmResumesTool.new(user: current_user))
+    @ruby_llm_chat.with_instructions(instructions)
+
+    @ruby_llm_chat.ask(@message.content) do |chunk|
+      next if chunk.content.blank?
+
+      @assistant_message.content += chunk.content
+      broadcast_replace(@assistant_message)
+    end
+  end
+
 
   def create
     @chat = current_user.chats.find(params[:chat_id])
@@ -39,14 +62,13 @@ class MessagesController < ApplicationController
     if @message.save
       @ruby_llm_chat = RubyLLM.chat
       build_conversation_history
+      # response = @ruby_llm_chat.with_instructions(instructions).ask(@message.content)
+      # ------------- LECTURE WAS SAYING TO DO IT LIKE THIS NOW ----------
+      @assistant_message = @chat.messages.create(role: "assistant", content: "")
+      response = ask_llm
+      @assistant_message.update(content: response.content)
+      broadcast_replace(@assistant_message)
 
-      # resume gets modified by LLM - 2 lines added to wire it up
-      @ruby_llm_chat.with_tool(SearchResumesTool)
-      @ruby_llm_chat.with_tool(CreateLlmResumeTool.new(user: current_user))
-
-      response = @ruby_llm_chat.with_instructions(instructions).ask(@message.content)
-
-      @assistant_message = @chat.messages.create(role: "assistant", content: response.content)
       @chat.generate_title_from_first_message
 
       respond_to do |format|
@@ -68,6 +90,8 @@ class MessagesController < ApplicationController
 
   def build_conversation_history
     @chat.messages.each do |message|
+      next if message.content.blank?
+
       @ruby_llm_chat.add_message(role: message.role.to_sym, content: message.content)
     end
   end
