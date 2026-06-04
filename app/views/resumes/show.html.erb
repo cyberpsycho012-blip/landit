@@ -1,31 +1,37 @@
-<div class="container mt-3 mb-5">
-<h1 class="text-center p-3"><%= @resume.name %></h1>
-
-<div class="card-product">
-  <div class="card-product-infos">
-    <h2>Education:</h2>
-    <p><%= simple_format(@resume.education) %></p>
-
-    <h2>Languages:</h2>
-    <p><%= @resume.languages %></p>
-
-    <h2>Main tech skill:</h2>
-    <p><%= @resume.main_tech_skill %></p>
-
-    <h2>Secondary tech skill:</h2>
-    <p><%= @resume.secondary_tech_skills %></p>
-
-    <h2>Soft skills:</h2>
-    <p><%= @resume.soft_skills %></p>
-
-    <h2>Work experiences:</h2>
-    <p><%= simple_format(@resume.work_experiences) %></p>
-
-    <h2>Years of experience:</h2>
-    <p><%= @resume.years_of_experience %></p>
-  </div>
-</div>
-
 <%= link_to "Back to List", resumes_path, class: 'btn btn-primary m-3' %>
 <%= link_to "Edit Resume", edit_resume_path(@resume), class: 'btn btn-primary m-3' %>
+
+<h1 class="text-center p-3"><%= @resume.name %></h1>
+
+<div class="row position-relative" data-controller="toggle">
+    <div class="sticky-sidebar mt-2 px-4 ms-3">
+      <%= render "shared/sidenav_icons" %>
+    </div>
+    <div class="col-2 mx-3">
+      <div class="sidebar">
+        <nav class="pt-1 me-4 p-4" data-toggle-target="hideable">
+          <%= render "shared/sidenav", resumes: @resumes %>
+        </nav>
+      </div>
+    </div>
+  <div class="col-6 offset-1">
+    <div class="card-product">
+      <div class="card-product-infos">
+        <h2>Education:</h2>
+        <p><%= simple_format(@resume.education) %></p>
+        <h2>Languages:</h2>
+        <p><%= @resume.languages %></p>
+        <h2>Main tech skill:</h2>
+        <p><%= @resume.main_tech_skill %></p>
+        <h2>Secondary tech skill:</h2>
+        <p><%= @resume.secondary_tech_skills %></p>
+        <h2>Soft skills:</h2>
+        <p><%= @resume.soft_skills %></p>
+        <h2>Work experiences:</h2>
+        <p><%= simple_format(@resume.work_experiences) %></p>
+        <h2>Years of experience:</h2>
+        <p><%= @resume.years_of_experience %> years</p>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,4 +1,6 @@
 class ResumesController < ApplicationController
+  before_action :set_resumes
+
   def index
     @resumes = Resume.all
   end
@@ -38,5 +40,9 @@ class ResumesController < ApplicationController
   def resume_params
     params.require(:resume).permit(:name, :education, :main_tech_skill, :secondary_tech_skills, :soft_skills,
                                    :languages, :years_of_experience, :work_experiences)
+  end
+
+  def set_resumes
+    @resumes = Resume.all
   end
 end
