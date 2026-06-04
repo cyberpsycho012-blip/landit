@@ -1,22 +1,38 @@
-<%= link_to "Back to List", resumes_path, class: 'btn btn-primary m-3' %>
-<%= link_to "Edit Resume", edit_resume_path(@resume), class: 'btn btn-primary m-3' %>
+<div class='btns-resume'>
+  <div>
+    <%= link_to "Back to List", resumes_path, class: 'btn btn-primary' %>
+  </div>
+
+  <div>
+    <%= link_to "Edit Resume", edit_resume_path(@resume), class: 'btn btn-primary' %>
+    <%= link_to "Delete Resume", resume_path(@resume), class: 'btn btn-outline-danger me-3',  data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}%>
+  </div>
+</div>
+
 
 <h1 class="text-center p-3"><%= @resume.name %></h1>
 
-<div class="row position-relative" data-controller="toggle">
-    <div class="sticky-sidebar mt-2 px-4 ms-3">
-      <%= render "shared/sidenav_icons" %>
+<div class="resume-with-list  position-relative" data-controller="toggle">
+
+  <div>
+    <div class="sidebar" data-toggle-target="hideable">
+      <nav class="pt-1 me-4 p-4">
+        <%= link_to "#", class: "nav-link text-dark mb-2",
+          data: { action: "click->toggle#call", toggle_target: "icon" } do %>
+          <i class="fa-solid fa-chevron-left"></i>
+        <% end %>
+        <%= render "shared/sidenav", resumes: @resumes %>
+      </nav>
     </div>
-    <div class="col-2 mx-3">
-      <div class="sidebar">
-        <nav class="pt-1 me-4 p-4" data-toggle-target="hideable">
-          <%= render "shared/sidenav", resumes: @resumes %>
-        </nav>
-      </div>
-    </div>
-  <div class="col-6 offset-1">
+  </div>
+
+  <div class="dynamic-stretch">
     <div class="card-product">
       <div class="card-product-infos">
+        <%= link_to "#", class: "nav-link text-dark d-none",
+            data: { action: "click->toggle#call", toggle_target: "icon" } do %>
+          <i class="fa-solid fa-chevron-right"></i>
+        <% end %>
         <h2>Education:</h2>
         <p><%= simple_format(@resume.education) %></p>
         <h2>Languages:</h2>

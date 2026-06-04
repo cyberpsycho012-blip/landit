@@ -6,4 +6,32 @@
   li {
     line-height: 2rem;
   }
+  a{
+    text-decoration: none;
+    color: black;
+  }
+  a:hover {
+    color: purple;
+    border-bottom: 1px dotted purple;
+  }
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 30px;
+  width: 90vw;
+  margin: 30px auto;
+}
+
+.test {
+ border: 1px solid black;
+}
+
+.delete-chat {
+  display: block;
+  text-align: end;
+  text-decoration: none;
+  font-weight: 600;
+  color: rgb(139, 8, 8);
 }

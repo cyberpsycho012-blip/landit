@@ -1,11 +1,18 @@
-User.destroy_all
 Chat.destroy_all
+User.destroy_all
 Resume.destroy_all
 
-user = User.create!(
+user1 = User.create!(
   first_name: "John",
   last_name: "Doe",
   email: "john.doe@example.com",
+  password: "123456",
+)
+
+user2 = User.create!(
+  first_name: "jane",
+  last_name: "doe",
+  email: "janedoe@example.com",
   password: "123456",
 )
 
@@ -18,7 +25,7 @@ Resume.create!(
     secondary_tech_skills: "figma",
     soft_skills: "Team work",
     work_experiences: " 01.2026 - 04.2026 working at le wagon",
-    user: user
+    user: user1
 )
 
 Resume.create!(
@@ -30,7 +37,6 @@ Resume.create!(
   secondary_tech_skills: "python",
   soft_skills: "team work and problem comprention",
   work_experiences: " 04.2006 - 06.2010 working for a tech company",
-  user: user
+  user: user2
 )
-
-#done
+#done1

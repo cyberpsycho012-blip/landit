@@ -1,7 +1,6 @@
 class Resume < ApplicationRecord
   belongs_to :user, optional: true
-  has_many  :chats, through: :user, dependent: :destroy
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: { scope: :user_id }
   validates :education, presence: true
   validates :languages, presence: true
   validates :main_tech_skill, presence: true

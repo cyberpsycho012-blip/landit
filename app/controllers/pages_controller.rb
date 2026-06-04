@@ -6,8 +6,11 @@ class PagesController < ApplicationController
   def dashboard
     @chats = current_user.chats
     @message = Message.new
-
-    @chat = current_user.chats.last unless @chats.empty?
+    @chat = if params[:chat_id].present?
+              @chats.find(params[:chat_id])
+            else
+              @chats.last
+            end
   end
 
   private
