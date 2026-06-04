@@ -4,12 +4,14 @@
 <h1 class="text-center p-3"><%= @resume.name %></h1>
 
 <div class="row position-relative" data-controller="toggle">
-    <div class="sticky-sidebar mt-2 px-4 ms-3">
-      <%= render "shared/sidenav_icons" %>
-    </div>
-    <div class="col-2 mx-3">
-      <div class="sidebar">
-        <nav class="pt-1 me-4 p-4" data-toggle-target="hideable">
+
+    <div class="col-2">
+      <div class="sidebar" data-toggle-target="hideable">
+        <nav class="pt-1 me-4 p-4">
+          <%= link_to "#", class: "nav-link text-dark",
+            data: { action: "click->toggle#call", toggle_target: "icon" } do %>
+            <i class="fa-regular fa-square-caret-left"></i>
+          <% end %>
           <%= render "shared/sidenav", resumes: @resumes %>
         </nav>
       </div>
@@ -17,6 +19,10 @@
   <div class="col-6 offset-1">
     <div class="card-product">
       <div class="card-product-infos">
+        <%= link_to "#", class: "nav-link text-dark d-none",
+            data: { action: "click->toggle#call", toggle_target: "icon" } do %>
+          <i class="fa-regular fa-square-caret-right"></i>
+        <% end %>
         <h2>Education:</h2>
         <p><%= simple_format(@resume.education) %></p>
         <h2>Languages:</h2>
