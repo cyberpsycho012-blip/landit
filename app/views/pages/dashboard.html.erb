@@ -29,4 +29,10 @@
         </div>
       </div>
     <% end %>
+    <div></div>
+    <div>
+      <%= link_to "delete chat", chat_path(@chat), class: 'delete-chat',  data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} if @chat%>
+    </div>
+
+
 </div>

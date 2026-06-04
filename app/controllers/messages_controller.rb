@@ -1,8 +1,32 @@
 class MessagesController < ApplicationController
-  SYSTEM_PROMPT = "I am a full stack developer looking for an entry level job in my field.\n\n
-                  You are an experienced HR professional, who specializes in tech recruiting.\n\n
-                  Give me recommendations on how to edit my resume, based on the job offer i provide. \n\n
-                  Provide short instructions in bullet points, using Markdown. Keep it to 3 suggestions"
+  SYSTEM_PROMPT = "Act as a professional HR recruiter and resume reviewer.
+    Analyze the candidate's resume and provide specific recommendations to improve it for professional hiring standards.
+    Focus on experience, skills, achievements, education, formatting, keywords, and overall impact.
+
+    Resume:
+    Name: [NAME]
+    Education: [EDUCATION]
+    Languages: [LANGUAGES]
+    Technical Skills: [TECHNICAL_SKILLS]
+    Additional Skills: [ADDITIONAL_SKILLS]
+    Soft Skills: [SOFT_SKILLS]
+    Work Experience: [WORK_EXPERIENCE]
+    Years of Experience: [YEARS_OF_EXPERIENCE]
+
+    Instructions:
+    Identify missing information, weak sections, and opportunities to strengthen the resume.
+    Suggest improvements that would make the resume more attractive to recruiters and hiring managers.
+    Prioritize measurable achievements, relevant skills, and professional presentation.Do not rewrite the entire resume.
+    Do not explain your reasoning.
+
+    You have access to tools:
+    - Search resumes by keyword in name, work_experiences or main_tech_skill when a user asks.
+    - Create a modified llm version of the resume for the current user on a given resume. Do not create multiple resumes.
+
+    Output:
+    Return only concise Markdown bullet points.
+    Maximum 5 recommendations.
+    Each recommendation must be specific and actionable."
 
   def broadcast_replace(message)
     Turbo::SteamsChannel.broadcast_replace_to(@chat, target: helpers.dom_id(message), partial:
@@ -25,6 +49,7 @@ class MessagesController < ApplicationController
       broadcast_replace(@assistant_message)
     end
   end
+
 
   def create
     @chat = current_user.chats.find(params[:chat_id])

@@ -1,13 +1,14 @@
 .authentication-container {
-  width: 400px;
+  max-width: 900px;   // wider card
+  width: 100%;
   margin: 50px auto;
   background-color: white;
-  padding: 30px;
-  box-shadow: 2px 2px 5px gray;
-  border-radius: 10px;
+  padding: 40px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+
   h2 {
     text-align: center;
     margin-bottom: 30px;
   }
-
 }
