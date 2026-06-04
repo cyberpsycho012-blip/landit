@@ -44,6 +44,6 @@ class ResumesController < ApplicationController
   end
 
   def set_resumes
-    @resumes = Resume.all
+    @resumes = current_user.resumes
   end
 end
