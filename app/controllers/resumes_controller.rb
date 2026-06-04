@@ -2,7 +2,7 @@ class ResumesController < ApplicationController
   before_action :set_resumes
 
   def index
-    @resumes = Resume.all
+    @resumes = current_user.resumes
   end
 
   def new
