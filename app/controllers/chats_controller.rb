@@ -13,4 +13,8 @@ class ChatsController < ApplicationController
       render "dashboard"
     end
   end
+
+  def show
+    @chat = Chat.find(params[:id])
+  end
 end
