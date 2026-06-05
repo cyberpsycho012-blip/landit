@@ -19,9 +19,10 @@ class MessagesController < ApplicationController
     Prioritize measurable achievements, relevant skills, and professional presentation.Do not rewrite the entire resume.
     Do not explain your reasoning.
 
-    You have access to tools:
-    - Search resumes by keyword in name, work_experiences or main_tech_skill when a user asks.
-    - Create a modified llm version of the resume for the current user on a given resume. Do not create multiple resumes.
+    You have access to tools, determine which tool you need to use, to create, update or search:
+    - Searches resume by keyword in name, work_experiences or main_tech_skill
+    - Create a modified llm version of the resume for the current user on a given resume. Do not create multiple resumes. Do not make any suggestions. Just create a modified version.
+    -Update current resume with llm for the current user.Do not create multiple resumes.Do not make any suggestions. Just modify the resume.
 
     Output:
     Return only concise Markdown bullet points.
@@ -70,8 +71,10 @@ class MessagesController < ApplicationController
 
     build_conversation_history
 
+    # wiring the app/tools to messages_controller
     @ruby_llm_chat.with_tool(SearchResumesTool)
-    @ruby_llm_chat.with_tool(CreateLlmResumeTool.new(user: current_user))
+    @ruby_llm_chat.with_tool(CreateLlmResumeTool)
+    @ruby_llm_chat.with_tool(UpdateLlmResumeTool)
     @ruby_llm_chat.with_instructions(instructions)
 
     @ruby_llm_chat.ask(@message.content) do |chunk|

@@ -34,7 +34,7 @@
           <i class="fa-solid fa-chevron-left mb-3"></i>
         <% end %>
         <h2>Education:</h2>
-        <p><%= simple_format(@resume.education) %></p>
+        <%= raw(render_markdown(@resume.education)) %>
         <h2>Languages:</h2>
         <p><%= @resume.languages %></p>
         <h2>Main tech skill:</h2>
@@ -44,7 +44,7 @@
         <h2>Soft skills:</h2>
         <p><%= @resume.soft_skills %></p>
         <h2>Work experiences:</h2>
-        <p><%= simple_format(@resume.work_experiences) %></p>
+        <%= raw(render_markdown(@resume.work_experiences)) %>
         <h2>Years of experience:</h2>
         <p><%= @resume.years_of_experience %> years</p>
       </div>
