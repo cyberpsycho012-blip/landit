@@ -1,0 +1,47 @@
+.resume-page {
+  width: 70vw;
+  margin: 40px auto;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: $border-radius-xxl;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+
+  h1 {
+    margin-bottom: 20px;
+  }
+}
+
+.resume-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.resume-form input,
+.resume-form textarea,
+.resume-form select {
+  padding: 12px 14px;
+  border-radius: $border-radius-lg;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.resume-form input:focus,
+.resume-form textarea:focus,
+.resume-form select:focus {
+  border-color: $primary;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 3px rgba($primary, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.12);
+  outline: none;
+}
+
+.resume-hint {
+  font-size: 0.9rem;
+  color: lighten($body-color, 20%);
+  margin-top: -10px;
+}

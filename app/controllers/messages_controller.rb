@@ -28,10 +28,42 @@ class MessagesController < ApplicationController
     Maximum 5 recommendations.
     Each recommendation must be specific and actionable."
 
-  def broadcast_replace(message)
-    Turbo::StreamsChannel.broadcast_replace_to(@chat, target: helpers.dom_id(message), partial:
-    "messages/message", locals: { mesage: message })
+  def create
+    @chat = current_user.chats.find(params[:chat_id])
+    @resumes = current_user.resumes
+
+    @message = Message.new(message_params)
+    @message.chat = @chat
+    @message.role = "user"
+
+    if @message.save
+      @assistant_message = @chat.messages.create(role: "assistant", content: "")
+
+      response = ask_llm
+      @assistant_message.update(content: response.content)
+      broadcast_replace(@assistant_message)
+
+      @chat.generate_title_from_first_message
+
+      respond_to do |format|
+        format.turbo_stream # renders `app/views/messages/create.turbo_stream.erb`
+        format.html { redirect_to chat_path(@chat) }
+      end
+    else
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "new_message_container",
+            partial: "messages/form",
+            locals: { chat: @chat, message: @message }
+          )
+        end
+        format.html { render "chats/show", status: :unprocessable_entity }
+      end
+    end
   end
+
+  private
 
   def ask_llm
     @ruby_llm_chat = RubyLLM.chat
@@ -50,41 +82,13 @@ class MessagesController < ApplicationController
     end
   end
 
-  def create
-    @chat = current_user.chats.find(params[:chat_id])
-    @resumes = current_user.resumes
-
-    @message = Message.new(message_params)
-    @message.chat = @chat
-    @message.role = "user"
-
-    if @message.save
-      @ruby_llm_chat = RubyLLM.chat
-      build_conversation_history
-
-      @assistant_message = @chat.messages.create(role: "assistant", content: "")
-      response = ask_llm
-      @assistant_message.update(content: response.content)
-      broadcast_replace(@assistant_message)
-
-      @chat.generate_title_from_first_message
-
-      respond_to do |format|
-        format.turbo_stream # renders `app/views/messages/create.turbo_stream.erb`
-        format.html { redirect_to chat_path(@chat) }
-      end
-    else
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.update("new_message_container", partial: "messages/form",
-                                                                            locals: { chat: @chat, message: @message })
-        end
-        format.html { render "chats/show", status: :unprocessable_entity }
-      end
-    end
+  def broadcast_replace(message)
+    Turbo::StreamsChannel.broadcast_replace_to(
+      @chat,
+      target: helpers.dom_id(message),
+      partial: "messages/message", locals: { message: message }
+    )
   end
-
-  private
 
   def build_conversation_history
     @chat.messages.each do |message|
@@ -98,13 +102,10 @@ class MessagesController < ApplicationController
     my_resumes = ""
     @resumes.each do |resume|
       my_resumes += "
-        Resume name: #{resume.name}
-        Education: #{resume.education}
-        Languages: #{resume.languages}
-        Main Teach Skill: #{resume.main_tech_skill}
+        Resume name: #{resume.name} Education: #{resume.education}
+        Languages: #{resume.languages} Main Teach Skill: #{resume.main_tech_skill}
         Secondary Tech Skill: #{resume.secondary_tech_skills}
-        Soft Skill: #{resume.soft_skills}
-        Years of Experiance: #{resume.years_of_experience}
+        Soft Skill: #{resume.soft_skills} Years of Experiance: #{resume.years_of_experience}
         Work Experiance: #{resume.work_experiences}."
     end
     "Here are my resumes: #{my_resumes}."
