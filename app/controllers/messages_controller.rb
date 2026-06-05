@@ -1,36 +1,12 @@
 class MessagesController < ApplicationController
-  SYSTEM_PROMPT = "Act as a professional HR recruiter and resume reviewer.
-    Analyze the candidate's resume and provide specific recommendations to improve it for professional hiring standards.
-    Focus on experience, skills, achievements, education, formatting, keywords, and overall impact.
-
-    Resume:
-    Name: [NAME]
-    Education: [EDUCATION]
-    Languages: [LANGUAGES]
-    Technical Skills: [TECHNICAL_SKILLS]
-    Additional Skills: [ADDITIONAL_SKILLS]
-    Soft Skills: [SOFT_SKILLS]
-    Work Experience: [WORK_EXPERIENCE]
-    Years of Experience: [YEARS_OF_EXPERIENCE]
-
-    Instructions:
-    Identify missing information, weak sections, and opportunities to strengthen the resume.
-    Suggest improvements that would make the resume more attractive to recruiters and hiring managers.
-    Prioritize measurable achievements, relevant skills, and professional presentation.Do not rewrite the entire resume.
-    Do not explain your reasoning.
-
-    You have access to tools:
-    - Search resumes by keyword in name, work_experiences or main_tech_skill when a user asks.
-    - Create a modified llm version of the resume for the current user on a given resume. Do not create multiple resumes.
-
-    Output:
-    Return only concise Markdown bullet points.
-    Maximum 5 recommendations.
-    Each recommendation must be specific and actionable."
-
   def create
     @chat = current_user.chats.find(params[:chat_id])
-    @resumes = current_user.resumes
+    # @resumes = current_user.resumes
+
+    embedding = RubyLLM.embed(params[:message][:content])
+    resumes = Resume.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(1)
+    @instructions = system_prompt
+    @instructions += resumes.map { |resume| resume_prompt(resume) }.join("\n\n")
 
     @message = Message.new(message_params)
     @message.chat = @chat
@@ -46,7 +22,7 @@ class MessagesController < ApplicationController
       @chat.generate_title_from_first_message
 
       respond_to do |format|
-        format.turbo_stream # renders `app/views/messages/create.turbo_stream.erb`
+        format.turbo_stream
         format.html { redirect_to chat_path(@chat) }
       end
     else
@@ -72,7 +48,7 @@ class MessagesController < ApplicationController
 
     @ruby_llm_chat.with_tool(SearchResumesTool)
     @ruby_llm_chat.with_tool(CreateLlmResumeTool.new(user: current_user))
-    @ruby_llm_chat.with_instructions(instructions)
+    @ruby_llm_chat.with_instructions(@instructions)
 
     @ruby_llm_chat.ask(@message.content) do |chunk|
       next if chunk.content.blank?
@@ -98,24 +74,56 @@ class MessagesController < ApplicationController
     end
   end
 
-  def resumes_contex
-    my_resumes = ""
-    @resumes.each do |resume|
-      my_resumes += "
-        Resume name: #{resume.name} Education: #{resume.education}
-        Languages: #{resume.languages} Main Teach Skill: #{resume.main_tech_skill}
-        Secondary Tech Skill: #{resume.secondary_tech_skills}
-        Soft Skill: #{resume.soft_skills} Years of Experiance: #{resume.years_of_experience}
-        Work Experiance: #{resume.work_experiences}."
-    end
-    "Here are my resumes: #{my_resumes}."
-  end
-
-  def instructions
-    [SYSTEM_PROMPT, resumes_contex].compact.join("\n\n")
-  end
-
   def message_params
     params.require(:message).permit(:content)
+  end
+
+  def resume_prompt(resume)
+    "Resume name: #{resume.name} Education: #{resume.education}
+    Languages: #{resume.languages} Main Teach Skill: #{resume.main_tech_skill}
+    Secondary Tech Skill: #{resume.secondary_tech_skills}
+    Soft Skill: #{resume.soft_skills} Years of Experiance: #{resume.years_of_experience}
+    Work Experiance: #{resume.work_experiences}, url: #{resume_url(resume)} ."
+  end
+
+  def system_prompt
+    "Act as a professional HR recruiter and resume reviewer.
+    Analyze the candidate's resume and provide specific recommendations to improve it for professional hiring standards.
+
+    Your task is to answer questions about the resumes and recommend the most relevant one and explain why.
+    Always share the name of a resume as clickable link with URL.
+
+    Focus on experience, skills, achievements, education, formatting, keywords, and overall impact.
+
+    Resume:
+    Name: [NAME]
+    Education: [EDUCATION]
+    Languages: [LANGUAGES]
+    Technical Skills: [TECHNICAL_SKILLS]
+    Additional Skills: [ADDITIONAL_SKILLS]
+    Soft Skills: [SOFT_SKILLS]
+    Work Experience: [WORK_EXPERIENCE]
+    Years of Experience: [YEARS_OF_EXPERIENCE]
+
+    Instructions:
+    Identify missing information, weak sections, and opportunities to strengthen the resume.
+    Suggest improvements that would make the resume more attractive to recruiters and hiring managers.
+    Prioritize measurable achievements, relevant skills, and professional presentation.Do not rewrite the entire resume.
+    Do not explain your reasoning.
+    You should only answer to questions related to your role.
+    You should not answer questions related to anything that we did not instruct you to do.
+    Do not only use bullet points to answer. Give spacing between answers.
+
+    You have access to tools:
+    - Search resumes by keyword in name, work_experiences or main_tech_skill when a user asks.
+    - Create a modified llm version of the resume for the current user on a given resume. Do not create multiple resumes.
+
+    Output:
+    Make your answers with a clean formatting for even users with dislexia or other problems can understand easily.
+    Make it easy for users to understand each section of your answers, for example answering in sections with a small title, but not create very long answers.
+    Use bullet points to organize the answers, but not too much.
+    Give spacing between answers.
+    Maximum 5 recommendations.
+    Each recommendation must be specific and actionable."
   end
 end

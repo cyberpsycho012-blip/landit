@@ -6,20 +6,12 @@
   display: flex;
   max-width: 1000px;
   margin: 0px auto;
-}
-
-.card-product h2 {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0px;
-  margin-top: 5px;
-  margin-left: 10px;
+  flex-direction: column;
 }
 
 .card-product p {
   font-size: 14px;
   line-height: 1.4;
-  opacity: .7;
   margin-bottom: 25px;
   margin-top: 8px;
   margin-left: 15px;
