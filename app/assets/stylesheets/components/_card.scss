@@ -4,8 +4,9 @@
   background: white;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   display: flex;
+  max-width: 1000px;
+  margin: 0px auto;
   flex-direction: column;
-
 }
 
 .card-product p {
