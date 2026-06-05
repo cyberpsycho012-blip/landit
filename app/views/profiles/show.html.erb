@@ -1,0 +1,19 @@
+<div class="profile-container text-center">
+
+  <% if @user.avatar.attached? %>
+    <%= image_tag @user.avatar, class: "avatar-large" %>
+  <% else %>
+    <%= image_tag "avatar.jpg", class: "avatar-large" %>
+  <% end %>
+
+  <h2 class="mt-3"><%= @user.email %></h2>
+
+  <p><strong>Email:</strong> <%= @user.email %></p>
+
+<% if @user.respond_to?(:bio) %>
+  <p><strong>Bio:</strong> <%= @user.bio %></p>
+<% end %>
+
+
+  <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-primary mt-3" %>
+</div>
