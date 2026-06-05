@@ -3,6 +3,11 @@ class ResumesController < ApplicationController
 
   def index
     @resumes = current_user.resumes
+    @resume = if params[:resume_id].present?
+                @resumes.find(params[:resume_id])
+              else
+                @resumes.last
+              end
   end
 
   def new
@@ -13,7 +18,7 @@ class ResumesController < ApplicationController
     @resume = Resume.new(resume_params)
     @resume.user = current_user
     if @resume.save
-      redirect_to resume_path(@resume), notice: "Resume created!"
+      redirect_to resumes_path, notice: "Resume created!"
     else
       render :new, status: :unprocessable_entity
     end
@@ -26,14 +31,10 @@ class ResumesController < ApplicationController
   def update
     @resume = Resume.find(params[:id])
     if @resume.update(resume_params)
-      redirect_to resume_path(@resume), notice: "Resume created!"
+      redirect_to resumes_path, notice: "Resume created!"
     else
       render :new, status: :unprocessable_entity
     end
-  end
-
-  def show
-    @resume = Resume.find(params[:id])
   end
 
   def destroy
