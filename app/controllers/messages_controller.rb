@@ -1,12 +1,12 @@
 class MessagesController < ApplicationController
   def create
     @chat = current_user.chats.find(params[:chat_id])
-    # @resumes = current_user.resumes
 
     embedding = RubyLLM.embed(params[:message][:content])
-    resumes = Resume.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(1)
+    @resumes = Resume.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
+    @resumes = @resumes.select { |resume| resume.user == current_user }
     @instructions = system_prompt
-    @instructions += resumes.map { |resume| resume_prompt(resume) }.join("\n\n")
+    @instructions += @resumes.map { |resume| resume_prompt(resume) }.join("\n\n")
 
     @message = Message.new(message_params)
     @message.chat = @chat
@@ -83,7 +83,7 @@ class MessagesController < ApplicationController
     Languages: #{resume.languages} Main Teach Skill: #{resume.main_tech_skill}
     Secondary Tech Skill: #{resume.secondary_tech_skills}
     Soft Skill: #{resume.soft_skills} Years of Experiance: #{resume.years_of_experience}
-    Work Experiance: #{resume.work_experiences}, url: #{resume_url(resume)} ."
+    Work Experiance: #{resume.work_experiences}, url: http://localhost:3000/resumes?resume_id=#{resume.id} ."
   end
 
   def system_prompt
