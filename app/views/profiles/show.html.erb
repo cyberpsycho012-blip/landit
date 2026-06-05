@@ -6,14 +6,17 @@
     <%= image_tag "avatar.jpg", class: "avatar-large" %>
   <% end %>
 
-  <h2 class="mt-3"><%= @user.email %></h2>
 
-  <p><strong>Email:</strong> <%= @user.email %></p>
+  <h2 class="mt-3">
+    <%= @user.first_name %> <%= @user.last_name %>
+  </h2>
 
-<% if @user.respond_to?(:bio) %>
-  <p><strong>Bio:</strong> <%= @user.bio %></p>
-<% end %>
 
+  <p class="text-muted"><%= @user.email %></p>
+
+  <% if @user.respond_to?(:bio) && @user.bio.present? %>
+    <p><strong>Bio:</strong> <%= @user.bio %></p>
+  <% end %>
 
   <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-primary mt-3" %>
 </div>
