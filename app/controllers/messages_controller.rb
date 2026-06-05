@@ -30,7 +30,7 @@ class MessagesController < ApplicationController
 
   def broadcast_replace(message)
     Turbo::StreamsChannel.broadcast_replace_to(@chat, target: helpers.dom_id(message), partial:
-    "messages/message", locals: { mesage: message })
+    "messages/message", locals: { message: message })
   end
 
   def ask_llm
