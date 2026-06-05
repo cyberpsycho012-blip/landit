@@ -21,7 +21,7 @@
 
     <% if @chat %>
       <div class="bg-white p-4">
-        <h1 id="chat_title"><%= @chat.title %></h1>
+        <h1 id="chat_title" class="mb-4"><%= @chat.title %></h1>
         <div id="messages">
           <%= render @chat.messages %>
         </div>

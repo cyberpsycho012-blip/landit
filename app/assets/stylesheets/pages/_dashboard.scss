@@ -24,8 +24,14 @@
   margin: 30px auto;
 }
 
-.test {
- border: 1px solid black;
+.user-message {
+  padding: 15px 30px;
+  border-radius: 50px;
+  max-width: 85%;
+
+  p {
+    margin: 0;
+  }
 }
 
 .delete-chat {
