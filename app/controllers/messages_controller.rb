@@ -85,7 +85,7 @@ class MessagesController < ApplicationController
     Languages: #{resume.languages} Main Teach Skill: #{resume.main_tech_skill}
     Secondary Tech Skill: #{resume.secondary_tech_skills}
     Soft Skill: #{resume.soft_skills} Years of Experiance: #{resume.years_of_experience}
-    Work Experiance: #{resume.work_experiences}, url: http://localhost:3000/resumes?resume_id=#{resume.id} ."
+    Work Experiance: #{resume.work_experiences}, url: https://landit-764b50a97f68.herokuapp.com/resumes?resume_id=#{resume.id} ."
   end
 
   def system_prompt
