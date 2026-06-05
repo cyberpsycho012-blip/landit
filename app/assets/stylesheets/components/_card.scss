@@ -4,22 +4,13 @@
   background: white;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   display: flex;
-  width: 100%;
-  margin: 0px;
-}
+  flex-direction: column;
 
-.card-product h2 {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0px;
-  margin-top: 5px;
-  margin-left: 10px;
 }
 
 .card-product p {
   font-size: 14px;
   line-height: 1.4;
-  opacity: .7;
   margin-bottom: 25px;
   margin-top: 8px;
   margin-left: 15px;
