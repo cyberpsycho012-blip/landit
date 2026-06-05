@@ -1,7 +1,7 @@
 <ul class="nav nav-pills flex-column">
   <% resumes.each do |resume| %>
     <li class="nav-item">
-      <%= link_to resume.name, resume_path(resume),
+      <%= link_to resume.name, resumes_path(resume_id:resume.id),
         class: "sidebar-details" %>
     </li>
   <% end %>

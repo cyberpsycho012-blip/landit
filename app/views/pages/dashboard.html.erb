@@ -4,7 +4,7 @@
 
 <div class="dashboard">
     <div class='pt-4'>
-      <h3>Your Chats:</h3>
+      <h3>My Chats:</h3>
       <div class="chat-list-container">
         <% if @chats.any? %>
           <ul>
@@ -13,7 +13,7 @@
             <% end %>
           </ul>
         <% else %>
-          There are no chats yet.
+          <p class='my-5'>There are no chats yet.</p>
         <% end %>
         <%= button_to "New Chat", chats_path, class: 'btn btn-primary' %>
       </div>
