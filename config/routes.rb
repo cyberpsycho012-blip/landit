@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   resources :resumes
 
   get "/dashboard", to: "pages#dashboard", as: :dashboard
-
+  resources :profiles, only: [:show]
   resources :chats, only: [:new, :create, :destroy] do
     resources :messages, only: [:create]
   end
