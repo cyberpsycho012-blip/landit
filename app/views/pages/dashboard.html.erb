@@ -23,7 +23,7 @@
       <div class="bg-white p-4">
         <h1 id="chat_title"><%= @chat.title %></h1>
         <div id="messages">
-          <%= render "messages/messages", messages: @chat.messages %>
+          <%= render @chat.messages %>
         </div>
 
         <div id="new_message_container">
